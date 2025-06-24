@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from "react";
 
 import Button from "../components/Button";
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ handlePlay }) {
   const [name, setName] = useState("");
   const [inputVisible, setInputVisible] = useState(true);
   const timerRef = useRef(null);
@@ -101,7 +101,7 @@ export default function WelcomeScreen() {
         </div>
       )}
 
-      <Button onClick={() => console.log(name)} disabled={!name}>
+      <Button onClick={handlePlay} disabled={!name}>
         PLAY!
       </Button>
     </div>
