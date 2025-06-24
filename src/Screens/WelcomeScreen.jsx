@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 
 import Button from "../components/Button";
+import { LOCAL_STORAGE_KEYS } from "../constants";
 
 export default function WelcomeScreen({ handlePlay }) {
   const [name, setName] = useState("");
@@ -49,6 +50,11 @@ export default function WelcomeScreen({ handlePlay }) {
 
   const handleEditName = () => {
     setInputVisible(true);
+  };
+
+  const gameStart = () => {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.PLAYER_NAME, name);
+    handlePlay();
   };
 
   return (
@@ -101,7 +107,7 @@ export default function WelcomeScreen({ handlePlay }) {
         </div>
       )}
 
-      <Button onClick={handlePlay} disabled={!name}>
+      <Button onClick={gameStart} disabled={!name}>
         PLAY!
       </Button>
     </div>

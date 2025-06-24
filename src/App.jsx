@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 
 import WelcomeScreen from "./Screens/WelcomeScreen";
 import PlayScreen from "./Screens/PlayScreen";
+import ScoreBoard from "./Screens/ScoreBoard";
 
 import { SCREENS } from "./constants.js";
 import setupImageFactory from "./imageFactory.js";
@@ -11,6 +12,14 @@ export default function App() {
 
   const handlePlay = () => {
     setCurrentScreen(SCREENS.PLAY);
+  };
+
+  const handleScoreboard = () => {
+    setCurrentScreen(SCREENS.SCOREBOARD);
+  };
+
+  const handleWelcome = () => {
+    setCurrentScreen(SCREENS.WELCOME);
   };
 
   const imageFactoryRef = useRef(setupImageFactory());
@@ -27,6 +36,13 @@ export default function App() {
         {currentScreen === SCREENS.PLAY && (
           <PlayScreen
             generateImageGrid={imageFactoryRef.current.generateImageGrid}
+            handleScoreboard={handleScoreboard}
+          />
+        )}
+        {currentScreen === SCREENS.SCOREBOARD && (
+          <ScoreBoard
+            handlePlay={handlePlay}
+            handleWelcome={handleWelcome}
           />
         )}
       </div>

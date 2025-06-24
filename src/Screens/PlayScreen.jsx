@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ANIMAL_TYPES } from "../constants";
+import { ANIMAL_TYPES, LOCAL_STORAGE_KEYS } from "../constants";
 
-const GAME_DURATION = 30; // seconds
+const GAME_DURATION = 2; // seconds
 const WARNING_TIME = 5; // seconds
 
-export default function PlayScreen({ generateImageGrid }) {
+export default function PlayScreen({ generateImageGrid, handleScoreboard }) {
   const [imageGrid, setImageGrid] = useState([]);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -23,6 +23,28 @@ export default function PlayScreen({ generateImageGrid }) {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      const playerName = localStorage.getItem(LOCAL_STORAGE_KEYS.PLAYER_NAME);
+      const history =
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.HISTORY)) || [];
+
+      history.push({
+        name: playerName,
+        score: score,
+        time: new Date(),
+      });
+      history.sort((a, b) => b.score - a.score);
+
+      localStorage.setItem(
+        LOCAL_STORAGE_KEYS.HISTORY,
+        JSON.stringify(history.slice(0, 10))
+      );
+
+      handleScoreboard();
+    }
+  }, [handleScoreboard, score, timeLeft]);
 
   const makeFreshImageGrid = useCallback(() => {
     setLoading(true);

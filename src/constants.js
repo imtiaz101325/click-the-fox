@@ -9,3 +9,8 @@ export const ANIMAL_TYPES = {
   FOX: "fox",
   DOG: "dog",
 };
+
+export const LOCAL_STORAGE_KEYS = {
+  PLAYER_NAME: "playerName",
+  HISTORY: "history",
+};
