@@ -18,7 +18,7 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-100 py-8">
       <div className="flex flex-col items-center w-full">
-        <h1 className="text-2xl font-bold mb-4 text-zinc-800">
+        <h1 className="text-3xl font-bold mb-4 text-zinc-800">
           Click the Fox! Game
         </h1>
         {currentScreen === SCREENS.WELCOME && (

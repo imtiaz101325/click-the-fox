@@ -53,12 +53,12 @@ export default function WelcomeScreen({ handlePlay }) {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <p className="mt-4 text-lg text-zinc-800">
+      <p className="mt-4 text-xl text-zinc-800">
         Welcome to the game! Click on the fox to score points.
       </p>
 
       {inputVisible && (
-        <p className="mt-4 text-lg text-zinc-800">Please Enter Your Name:</p>
+        <p className="mt-4 text-xl text-zinc-800">Please Enter Your Name:</p>
       )}
 
       {inputVisible ? (
@@ -76,11 +76,11 @@ export default function WelcomeScreen({ handlePlay }) {
       ) : (
         <div className="flex items-center mt-4">
           <p
-            className="text-lg font-medium text-zinc-800"
+            className="text-xl font-medium text-zinc-800"
             onClick={handleEditName}
           >
             Player:{" "}
-            <span className="border-b border-dotted border-amber-500 cursor-pointer">
+            <span className="border-b border-dotted border-amber-500 cursor-pointer text-2xl">
               {name}
             </span>
           </p>

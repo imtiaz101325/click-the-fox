@@ -1,10 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ANIMAL_TYPES } from "../constants";
 
+const GAME_DURATION = 30; // seconds
+const WARNING_TIME = 5; // seconds
+
 export default function PlayScreen({ generateImageGrid }) {
   const [imageGrid, setImageGrid] = useState([]);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          return 0; // Stop the timer when it reaches 0
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const makeFreshImageGrid = useCallback(() => {
     setLoading(true);
@@ -39,11 +57,22 @@ export default function PlayScreen({ generateImageGrid }) {
 
   return (
     <div className="w-full max-w-5xl px-4">
-      <div className="flex flex-col items-center">
-        <p className="mt-4 text-lg text-zinc-800">
-          Score: <span className="font-bold">{score}</span>
+      <div className="flex flex-row justify-around items-center">
+        <p className="mt-4 text-xl text-zinc-800">
+          Score: <span className="font-bold text-2xl">{score}</span>
         </p>
-        <p className="mt-4 text-lg text-zinc-800">Time Left: xxx</p>
+        <p className="mt-4 text-xl text-zinc-800">
+          Time Left:{" "}
+          <span
+            className={
+              timeLeft <= WARNING_TIME
+                ? "text-red-500 animate-pulse text-2xl"
+                : "text-zinc-800 text-2xl"
+            }
+          >
+            {timeLeft}
+          </span>
+        </p>
       </div>
       {loading ? (
         <div className="grid grid-cols-3 gap-6 mt-6 w-full">
