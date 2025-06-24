@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ANIMAL_TYPES, LOCAL_STORAGE_KEYS } from "../constants";
 
-const GAME_DURATION = 2; // seconds
+const GAME_DURATION = 30; // seconds
 const WARNING_TIME = 5; // seconds
 
 export default function PlayScreen({ generateImageGrid, handleScoreboard }) {
