@@ -6,12 +6,13 @@ function setupImageQueue(fetchImageSrc) {
   const imageQueue = [];
 
   function addImage(src) {
+    if (imageQueue.includes(src)) return;
+
     const img = new Image();
 
     img.onload = () => {
       imageQueue.push(src);
     };
-      console.log("🚀 ~ addImage ~ imageQueue:", imageQueue)
 
     img.src = src;
   }
