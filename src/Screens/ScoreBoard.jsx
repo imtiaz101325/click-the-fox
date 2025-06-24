@@ -46,12 +46,12 @@ export default function ScoreBoard({ handlePlay, handleWelcome }) {
         <Button onClick={handlePlay}>
           Play Again
         </Button>
-        <button
+        <Button
           onClick={handleWelcome}
-          className="mt-2 sm:mt-4 px-6 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 font-semibold tracking-wide text-lg rounded-xl shadow-md transition duration-200"
+          variant="secondary"
         >
           Back to Welcome
-        </button>
+        </Button>
       </div>
     </div>
   );
