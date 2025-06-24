@@ -5,44 +5,43 @@ export default function PlayScreen({ getCatImage, getFoxImage, getDogImage }) {
   const [imageGrid, setImageGrid] = useState([]);
   const [score, setScore] = useState(0);
 
-  const getRandomAnimalImageObject = useCallback(
-    (index) => {
+  const makeFreshImageGrid = useCallback(() => {
+    const images = [];
+    let foxFound = false;
+    for (let i = 0; i < 9; i++) {
       let image;
       const randomRoundNumber = Math.floor(Math.random() * 100);
       if (randomRoundNumber % 3 === 0) {
         image = {
           src: getCatImage(),
-          alt: `Cat image ${index}`,
+          alt: `Cat image ${i}`,
           type: ANIMAL_TYPES.CAT,
         };
-      } else if (randomRoundNumber % 3 === 1) {
+      } else if (randomRoundNumber % 3 === 1 && !foxFound) {
         image = {
           src: getFoxImage(),
-          alt: `Fox image ${index}`,
+          alt: `Fox image ${i}`,
           type: ANIMAL_TYPES.FOX,
         };
+        foxFound = true;
       } else {
         image = {
           src: getDogImage(),
-          alt: `Dog image ${index}`,
+          alt: `Dog image ${i}`,
           type: ANIMAL_TYPES.DOG,
         };
       }
-      return image;
-    },
-    [getCatImage, getFoxImage, getDogImage]
-  );
-
-  useEffect(() => {
-    const images = [];
-    for (let i = 0; i < 9; i++) {
-      images.push(getRandomAnimalImageObject(i));
+    
+      images.push(image);
     }
     setImageGrid(images);
     console.log("🚀 ~ fetchImages ~ images:", images);
+  }, [getCatImage, getDogImage, getFoxImage]);
 
-    // Cleanup function to reset the grid when the component unmounts
-  }, [getRandomAnimalImageObject]);
+
+  useEffect(() => {
+    makeFreshImageGrid();
+  }, [makeFreshImageGrid]);
 
 
   const calculateScoreAndReplaceImage = useCallback((index) => {
@@ -52,13 +51,8 @@ export default function PlayScreen({ getCatImage, getFoxImage, getDogImage }) {
       setScore((prevScore) => Math.max(prevScore - 1, 0));
     }
 
-    const newImage = getRandomAnimalImageObject();
-    setImageGrid((prevGrid) => {
-      const newGrid = [...prevGrid];
-      newGrid[index] = newImage;
-      return newGrid;
-    });
-  }, [getRandomAnimalImageObject, imageGrid]);
+    makeFreshImageGrid();
+  }, [makeFreshImageGrid, imageGrid]);
 
   return (
     <div className="w-full max-w-5xl px-4">
