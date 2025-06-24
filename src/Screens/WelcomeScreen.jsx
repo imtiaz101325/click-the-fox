@@ -20,7 +20,7 @@ export default function WelcomeScreen({ handlePlay }) {
       if (value.trim()) {
         setInputVisible(false);
       }
-    }, 800);
+    }, 1000);
   }, []);
 
   const handleName = useCallback((value) => {
