@@ -1,5 +1,7 @@
-const IMAGE_QUEUE_INTERVAL = 500; // milliseconds
-const IMAGE_QUEUE_SIZE = 10; // maximum number of images in the queue
+import { ANIMAL_TYPES } from "./constants";
+
+const IMAGE_QUEUE_INTERVAL = 300; // milliseconds
+const IMAGE_QUEUE_SIZE = 54; // maximum number of images in the queue
 
 // An image queue "factory" that manages a queue of images to be pre-loaded.
 function setupImageQueue(fetchImageSrc) {
@@ -11,18 +13,23 @@ function setupImageQueue(fetchImageSrc) {
     const img = new Image();
 
     img.onload = () => {
-      imageQueue.push(src);
-    };
+      imageQueue.push({img, src});
+    }
 
     img.src = src;
   }
 
-  function getImage() {
+  async function getImage() {
+    // Retry mechanism for slow internet connections
     if (imageQueue.length === 0) {
-      return null;
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(getImage());
+        }, IMAGE_QUEUE_INTERVAL * 2);
+      });
     }
 
-    return imageQueue.shift();
+    return imageQueue.shift().src;
   }
 
   // start loading images
@@ -35,8 +42,8 @@ function setupImageQueue(fetchImageSrc) {
   }, IMAGE_QUEUE_INTERVAL);
 
   function destroy() {
-    imageQueue.length = 0; // Clear the queue
-    clearInterval(handel); // Stop the interval
+    imageQueue.length = 0;
+    clearInterval(handel);
   }
 
   return { getImage, destroy };
@@ -65,9 +72,60 @@ export default function setupImageFactory() {
   const foxImageQueue = setupImageQueue(getFoxImageSrc);
   const dogImageQueue = setupImageQueue(getDogImageSrc);
 
+  async function generateImageGrid() {
+    // Generate a new grid of images with a mix of cats, dogs, and one fox
+    const imageObjects = [];
+    let foxFound = false;
+    for (let i = 0; i < 9; i++) {
+      let image;
+      const randomRoundNumber = Math.floor(Math.random() * 100);
+      if (randomRoundNumber % 3 === 0) {
+        image = {
+          alt: `Cat image ${i}`,
+          type: ANIMAL_TYPES.CAT,
+        };
+      } else if (randomRoundNumber % 3 === 1 && !foxFound) {
+        image = {
+          alt: `Fox image ${i}`,
+          type: ANIMAL_TYPES.FOX,
+        };
+        foxFound = true;
+      } else {
+        image = {
+          alt: `Dog image ${i}`,
+          type: ANIMAL_TYPES.DOG,
+        };
+      }
+
+      imageObjects.push(image);
+    }
+
+    // fetch the images that are ideally pre-loaded in browser cache
+    const imagePromises = imageObjects.map(async (image) => {
+      let src;
+      switch (image.type) {
+        case ANIMAL_TYPES.CAT:
+          src = await catImageQueue.getImage();
+          break;
+        case ANIMAL_TYPES.FOX:
+          src = await foxImageQueue.getImage();
+          break;
+        case ANIMAL_TYPES.DOG:
+          src = await dogImageQueue.getImage();
+          break;
+      }
+      return {
+        src,
+        alt: image.alt,
+        type: image.type,
+      };
+    });
+
+
+    return Promise.all(imagePromises);
+  }
+
   return {
-    getCatImage: () => catImageQueue.getImage(),
-    getFoxImage: () => foxImageQueue.getImage(),
-    getDogImage: () => dogImageQueue.getImage(),
+    generateImageGrid
   };
 }

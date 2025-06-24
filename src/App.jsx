@@ -26,9 +26,7 @@ export default function App() {
         )}
         {currentScreen === SCREENS.PLAY && (
           <PlayScreen
-            getCatImage={imageFactoryRef.current.getCatImage}
-            getFoxImage={imageFactoryRef.current.getFoxImage}
-            getDogImage={imageFactoryRef.current.getDogImage}
+            generateImageGrid={imageFactoryRef.current.generateImageGrid}
           />
         )}
       </div>
